@@ -2,3 +2,5 @@
 *.pyc
 
 src/pysb/
+key.txt
+sbase_zd.py

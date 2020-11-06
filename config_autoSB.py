@@ -27,24 +27,31 @@ Input variables
 #   REQUIRED
 #-----------------------
 # SB username (should be entire USGS email):
-useremail = 'esturdivant@usgs.gov'
+useremail = 'zdefne@usgs.gov'
 # SB password. If commented out, you will be prompted for your password each time you run the script.
-#password =
-
+password = ""
+with open('key.txt', 'r') as kfile:
+    password=kfile.read()
+    
 # URL of data release landing page (e.g. 'https://www.sciencebase.gov/catalog/item/__item_ID__'):
 # landing_link = "https://www.sciencebase.gov/catalog/item/5a54fbc3e4b01e7be242b917" # testing page
-landing_link = "https://www.sciencebase.gov/catalog/item/5d5ece47e4b01d82ce961e36" # Deep Dive volume II
+# landing_link = "https://www.sciencebase.gov/catalog/item/5d5ece47e4b01d82ce961e36" # Deep Dive volume II
+landing_link = "https://www.sciencebase.gov/catalog/item/5f5aa37082cefd9f20868a9c" #VEG
+landing_link = "https://www.sciencebase.gov/catalog/item/5f28109582cef313ed9cd787" #UVVR
 
 # Path to local top-level directory of data release (equivalent to landing page):
 # OSX: If this is a server mounted and visible in your Volumes: r'/Volumes/[directory on server]'
-parentdir = r'/Volumes/stor/Projects/DeepDive/5_datarelease_packages/vol2/release_v4_forSB' # OSX format
+# parentdir = r'/Volumes/stor/Projects/DeepDive/5_datarelease_packages/vol2/release_v4_forSB' # OSX format
 # parentdir = r"D:\DeepDive\5_datarelease_packages\vol1\sb_upload_test" # WINDOWS format
+parentdir = r'E:/GIS/Landsat_UVVR\METADATA\VEG' 
+parentdir = r'E:/GIS/Landsat_UVVR\METADATA\UVVR' 
 
 # DOI of data release (e.g. '10.5066/F78P5XNK'):
-dr_doi = "10.5066/P9V7F6UX" # DOI for Deep Dive volume I
+# dr_doi = "10.5066/P9V7F6UX" # DOI for Deep Dive volume I
+dr_doi = "10.5066/[[DOInumber]]"
 
 # Year of publication, if it needs to updated. Used as the date in citation publication date and the calendar date in time period of content.
-pubdate = '2019'
+pubdate = '2020'
 
 # The edition element in the metadata can be modified here.
 #edition = '1.0'
@@ -62,10 +69,12 @@ pubdate = '2019'
 # body =
 # relatedItems = Associated items
 subparent_inherits = ['citation', 'contacts', 'body', 'webLinks', 'relatedItems'] #'purpose',
+subparent_inherits = [] #'purpose',
 
 # SB fields that data pages inherit from their parent page. All other fields will be automatically populated from the XML.
 # Recommended: citation, body, webLinks
 data_inherits = ['citation', 'contacts', 'body', 'webLinks', 'relatedItems']
+data_inherits = []
 
 # SB fields that will be populated from the XML file in the top directory, assuming an error-free XML is present.
 # Note that body = abstract. The Summary item on SB will automatically be created from body.
@@ -78,10 +87,10 @@ landing_fields_from_xml = []
 # Time-saving options
 #-------------------------------------------------------------------------------
 # Default True:
-update_subpages     = False # False to save time if page structure is already established.
+update_subpages     = True # False to save time if page structure is already established.
 delete_all_subpages = False # True to delete all child pages before running. Not necessary.
-update_XML          = True # False to save time if XML already has most up-to-date values.
-update_data         = False # False to save time if up-to-date data files have already been uploaded.
+update_XML          = False # False to save time if XML already has most up-to-date values.
+update_data         = True # False to save time if up-to-date data files have already been uploaded.
 update_extent       = False
 verbose             = True
 # page_per_filename   = False
@@ -92,18 +101,18 @@ start_xml_idx = 0 # 0 to perform for all XMLs. This is included in case a proces
 # Default False:
 add_preview_image_to_all = False # True to put first image file encountered in a directory on its corresponding page
 restore_original_xml     = False # True to restore original files saved on the first run of the code. Not necessary.
-remove_original_xml      = True  # True to remove original files saved on the first run of the code.
+remove_original_xml      = False  # True to remove original files saved on the first run of the code.
 # ------------------------------------------------------------------------------
 #   OPTIONAL - XML changes
 # ------------------------------------------------------------------------------
 # To change the "Suggested citation" in the Other Citation Information, choose one of two options: either use the find_and_replace variable or the new_othercit variable, see below.
 
 # FIND AND REPLACE. {key='desired value': value=['list of','values','to replace']}
-find_and_replace = {'**dr_doi**': dr_doi,
-    'xxx-ofr doi-***': '10.3133/ofr20191071',
-    # 'http:': 'https:',
-    'dx.doi.org': 'doi.org'
-    }
+# find_and_replace = {'**dr_doi**': dr_doi,
+#     'xxx-ofr doi-***': '10.3133/ofr20191071',
+#     # 'http:': 'https:',
+#     'dx.doi.org': 'doi.org'
+#     }
 
 # REMOVE ELEMENT. If an element needs to be removed, this will occur before additions or replacements
 # remove_fills = {'./idinfo/crossref':['AUTHOR', 'doi.org/10.3133/ofr20171015']}
@@ -162,7 +171,7 @@ find_and_replace = {'**dr_doi**': dr_doi,
 Initialize
 """
 #%% Initialize SB session
-password = getpass.getpass("ScienceBase password: ")
+# password = getpass.getpass("ScienceBase password: ")
 sb = log_in(useremail, password)
 
 stash_dir = os.path.join(parentdir, '.assistants')
